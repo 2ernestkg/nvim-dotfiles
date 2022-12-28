@@ -17,10 +17,16 @@ call plug#begin()
   if has("nvim")
     " Language Support
     Plug 'neoclide/coc.nvim' , { 'branch': 'release'}
+    Plug 'jiangmiao/auto-pairs'
 
     " Dart
     Plug 'dart-lang/dart-vim-plugin'
     Plug 'thosakwe/vim-flutter'
+
+    " Snippets
+    Plug 'honza/vim-snippets'
+    Plug 'natebosch/dartlang-snippets'
+
     " Theme
     Plug 'morhetz/gruvbox'
 endif

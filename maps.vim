@@ -55,10 +55,31 @@ nmap <silent> rn <Plug>(coc-rename)
 nmap <leader>ac  <Plug>(coc-codeaction)
 " Apply AutoFix to problem on the current line.
 nmap <leader>qf  <Plug>(coc-fix-current)
+" <c-space> to trigger completion
+if has('nvim')
+  inoremap <silent><expr> <c-space> coc#refresh()
+else
+  inoremap <silten><expr> <c-@> coc#refresh()
+endif
 
 let g:fugitive_pty = 0
 
-" NERDTree keymap
+" coc config
+let g:coc_global_extensions=[
+      \'coc-snippets',
+      \'coc-prettier',
+      \'coc-json',
+      \'coc-yaml',
+      \'coc-html',
+      \'coc-css',
+      \'coc-flutter',
+      \'coc-tsserver',
+      \'coc-tslint-plugin',
+      \'coc-eslint',
+      \'coc-emmet',
+      \]
+
+"NERDTree keymap
 nnoremap <leader>n :NERDTreeFocus<CR>
 nnoremap <C-n> :NERDTree<CR>
 nnoremap <C-t> :NERDTreeToggle<CR>
@@ -71,5 +92,5 @@ autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
 " closing NERDTree if last editor window closed
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 
-
-
+" gruvbox config
+let g:gruvbox_contrast='dark'
