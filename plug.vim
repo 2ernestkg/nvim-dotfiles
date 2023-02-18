@@ -13,11 +13,15 @@ call plug#begin()
   " VIM Airline
   Plug 'vim-airline/vim-airline'
   Plug 'vim-airline/vim-airline-themes'
+  " Telescope
+  Plug 'nvim-lua/plenary.nvim'
+  Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.1' }
 
   if has("nvim")
+    " Treesitter
+    Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
     " Language Support
     Plug 'neoclide/coc.nvim' , { 'branch': 'release'}
-    Plug 'jiangmiao/auto-pairs'
 
     " Dart
     Plug 'dart-lang/dart-vim-plugin'
@@ -29,6 +33,6 @@ call plug#begin()
 
     " Theme
     Plug 'morhetz/gruvbox'
-endif
-
+  endif
+  Plug 'windwp/nvim-autopairs'
 call plug#end()

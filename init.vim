@@ -128,12 +128,15 @@ au BufNewFile,BufRead *.mdx set filetype=markdown
 au BufNewFile,BufRead *.flow set filetype=javascript
 " Fish
 " au BufNewFile,BufRead *.fish set filetype=fish
+" Dart
+au BufNewFile,BufRead *.dart set filetype=dart
 
 set suffixesadd=.js,.es,.jsx,.json,.css,.less,.sass,.styl,.php,.py,.md
 
 autocmd FileType coffee setlocal shiftwidth=2 tabstop=2
 autocmd FileType ruby setlocal shiftwidth=2 tabstop=2
 autocmd FileType yaml setlocal shiftwidth=2 tabstop=2
+autocmd FileType dart setlocal shiftwidth=2 tabstop=2
 
 "}}}
 
