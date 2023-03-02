@@ -47,6 +47,7 @@ set updatetime=300
 
 " Delete empty space from the end of lines on every save
 autocmd BufWritePre * :%s/\s\+$//e
+autocmd BufWritePre *.dart :DartFmt
 
 " Disable backups and swap files
 set nobackup
