@@ -208,6 +208,10 @@ require('lazy').setup({
       },
     },
   },
+  -- File Formatting
+  "mhartington/formatter.nvim",
+  -- Language support, mainly for identation because it is more stable than treesitter
+  "dart-lang/dart-vim-plugin",
 
   {
     -- Highlight, edit, and navigate code
@@ -362,7 +366,7 @@ vim.defer_fn(function()
     auto_install = false,
 
     highlight = { enable = true },
-    indent = { enable = true },
+    indent = { enable = true, disable = { "dart" } },
     incremental_selection = {
       enable = true,
       keymaps = {
