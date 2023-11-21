@@ -60,6 +60,10 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
+-- Folding Method
+vim.opt.foldmethod = "expr"
+vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
+
 -- NOTE: Here is where you install your plugins.
 --  You can configure plugins using the `config` key.
 --
