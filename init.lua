@@ -534,7 +534,7 @@ local servers = {
   -- tsserver = {},
   -- html = { filetypes = { 'html', 'twig', 'hbs'} },
   tsserver = {
-    filetypes = { "typescript", "typescriptreact", "typescript.tsx", "javascript", "javascriptreact" },
+    filetypes = { 'typescript', 'javascript', 'typescriptreact', 'javascriptreact', 'typescript.tsx', 'javascript.jsx' },
     cmd = { "typescript-language-server", "--stdio" },
     init_options = {
       preferences = {
