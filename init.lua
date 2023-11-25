@@ -72,6 +72,9 @@ vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
 require('lazy').setup({
   -- NOTE: First, some plugins that don't require any configuration
 
+  -- NERD Tree
+  'preservim/nerdtree',
+
   -- Git related plugins
   'tpope/vim-fugitive',
   'tpope/vim-rhubarb',
@@ -556,6 +559,41 @@ mason_lspconfig.setup_handlers {
     }
   end,
 }
+
+require('lspconfig')["dartls"].setup({
+  on_attach = on_attach,
+  capabilities = capabilities,
+  cmd = {
+    "dart",
+    "language-server",
+    "--protocol=lsp",
+    -- "--port=8123",
+    -- "--instrumentation-log-file=/Users/robertbrunhage/Desktop/lsp-log.txt",
+  },
+  filetypes = { "dart" },
+  init_options = {
+    onlyAnalyzeProjectsWithOpenFiles = false,
+    suggestFromUnimportedLibraries = true,
+    closingLabels = true,
+    outline = false,
+    flutterOutline = false,
+  },
+  settings = {
+    dart = {
+      analysisExcludedFolders = {
+        vim.fn.expand("~/.pub-cache"),
+        vim.fn.expand("~/tools/flutter/"),
+      },
+      updateImportsOnRename = true,
+      completeFunctionCalls = true,
+      showTodos = true,
+    },
+  },
+})
+
+-- some tooltip for the lsp in bottom right
+require("fidget").setup({})
+
 
 -- [[ Configure nvim-cmp ]]
 -- See `:help cmp`
