@@ -12,7 +12,7 @@ local settings = {
 		require("formatter.filetypes.dart").dartformat,
 	},
 	javascript = {
-		require("formatter.defaults.prettier"),
+		require("formatter.filetypes.javascript").prettier,
 	},
 	["*"] = {
 		-- "formatter.filetypes.any" defines default configurations for any

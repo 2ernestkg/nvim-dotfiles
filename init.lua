@@ -104,6 +104,38 @@ require('lazy').setup({
       'folke/neodev.nvim',
     },
   },
+  {
+    "rcarriga/nvim-dap-ui",
+    event = "VeryLazy",
+    dependencies = "mfussenegger/nvim-dap",
+    config = function()
+      local dap = require("dap")
+      local dapui = require("dapui")
+      require("dapui").setup()
+      dap.listeners.after.event_initialized["dapui_config"] = function()
+        dapui.open()
+      end
+      dap.listeners.before.event_terminated["dapui_config"] = function()
+        dapui.close()
+      end
+      dap.listeners.before.event_exited["dapui_config"] = function()
+        dapui.close()
+      end
+    end
+  },
+  {
+    "mfussenegger/nvim-dap",
+    config = function()
+      require "custom.plugins.dap"
+    end
+  },
+  {
+    "mfussenegger/nvim-lint",
+    event = "VeryLazy",
+    config = function()
+      require "custom.plugins.lint"
+    end
+  },
 
   {
     -- Autocompletion
@@ -242,7 +274,7 @@ require('lazy').setup({
     },
     build = ':TSUpdate',
   },
-  require 'kickstart.plugins.autoformat',
+  --require 'kickstart.plugins.autoformat',
 
   -- NOTE: Next Step on Your Neovim Journey: Add/Configure additional "plugins" for kickstart
   --       These are some example plugins that I've included in the kickstart repository.
@@ -319,6 +351,10 @@ vim.keymap.set('n', 'sk', '<C-w>k')
 vim.keymap.set('n', 'sh', '<C-w>h')
 vim.keymap.set('n', 'sl', '<C-w>l')
 vim.keymap.set('n', 'sq', '<C-w>q')
+
+-- Debugging keymap --
+vim.keymap.set('n', '<leader>db', '<cmd> DapToggleBreakpoint <CR>', { desc = 'Add breakpoint at line' })
+vim.keymap.set('n', '<leader>dr', '<cmd> DapContinue <CR>', { desc = 'Run or continue debugger' })
 
 -- [[ Highlight on yank ]]
 -- See `:help vim.highlight.on_yank()`
@@ -533,6 +569,13 @@ require('mason-lspconfig').setup()
 --
 --  If you want to override the default filetypes that your language server will attach to you can
 --  define the property 'filetypes' to the map in question.
+local function organize_js_imports()
+  local params = {
+    command = "_typescript.organizeImports",
+    arguments = { vim.api.nvim_buf_get_name(0) },
+  }
+  vim.lsp.buf.execute_command(params)
+end
 local servers = {
   -- clangd = {},
   -- gopls = {},
@@ -540,12 +583,20 @@ local servers = {
   -- rust_analyzer = {},
   -- tsserver = {},
   -- html = { filetypes = { 'html', 'twig', 'hbs'} },
+  prettier = {},
+  eslint = {},
   tsserver = {
     filetypes = { 'typescript', 'javascript', 'typescriptreact', 'javascriptreact', 'typescript.tsx', 'javascript.jsx' },
     cmd = { "typescript-language-server", "--stdio" },
     init_options = {
       preferences = {
         disableSuggestions = true,
+      }
+    },
+    commands = {
+      OrganizeImports = {
+        organize_js_imports,
+        description = "Organize Imports",
       }
     },
   },
@@ -580,6 +631,7 @@ mason_lspconfig.setup_handlers {
       filetypes = (servers[server_name] or {}).filetypes,
       cmd = (servers[server_name] or {}).cmd,
       init_options = (servers[server_name] or {}).init_options,
+      commands = (servers[server_name] or {}).commands,
     }
   end,
 }
@@ -635,7 +687,7 @@ cmp.setup {
   mapping = cmp.mapping.preset.insert {
     ['<C-n>'] = cmp.mapping.select_next_item(),
     ['<C-p>'] = cmp.mapping.select_prev_item(),
-    ['<C-d>'] = cmp.mapping.scroll_docs( -4),
+    ['<C-d>'] = cmp.mapping.scroll_docs(-4),
     ['<C-f>'] = cmp.mapping.scroll_docs(4),
     ['<C-Space>'] = cmp.mapping.complete {},
     ['<CR>'] = cmp.mapping.confirm {
@@ -654,8 +706,8 @@ cmp.setup {
     ['<S-Tab>'] = cmp.mapping(function(fallback)
       if cmp.visible() then
         cmp.select_prev_item()
-      elseif luasnip.locally_jumpable( -1) then
-        luasnip.jump( -1)
+      elseif luasnip.locally_jumpable(-1) then
+        luasnip.jump(-1)
       else
         fallback()
       end
