@@ -27,13 +27,6 @@ require("formatter").setup({
 	filetype = settings,
 })
 
--- automatically format buffer before writing to disk:
-vim.api.nvim_create_augroup('BufWritePreFormatter', {})
-vim.api.nvim_create_autocmd('BufWritePre', {
-	command = 'FormatWrite',
-	group = 'BufWritePreFormatter',
-	pattern = { '*.js', '*.jsx', '*.ts', '*.tsx' },
-})
 vim.keymap.set("n", "<leader>f", function()
 	if settings[vim.bo.filetype] ~= nil then
 		vim.cmd([[Format]])

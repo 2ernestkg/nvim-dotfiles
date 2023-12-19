@@ -47,6 +47,12 @@ return {
         -- Tsserver usually works poorly. Sorry you work with bad languages
         -- You can remove this line if you know what you're doing :)
         if client.name == 'tsserver' then
+          vim.api.nvim_create_augroup('BufWritePreFormatter', {})
+          --vim.api.nvim_create_autocmd('BufWritePre', {
+          --  command = 'FormatWrite',
+          --  group = 'BufWritePreFormatter',
+          --  pattern = { '*.js', '*.jsx', '*.ts', '*.tsx' },
+          --})
           return
         end
 
