@@ -204,9 +204,13 @@ require('lazy').setup({
     -- Theme inspired by Atom
     'navarasu/onedark.nvim',
     priority = 1000,
-    config = function()
-      vim.cmd.colorscheme 'onedark'
-    end,
+  },
+  {
+    -- Tokyo Night Theme
+    "folke/tokyonight.nvim",
+    lazy = false,
+    priority = 1000,
+    opts = {},
   },
 
   {
@@ -216,7 +220,7 @@ require('lazy').setup({
     opts = {
       options = {
         icons_enabled = false,
-        theme = 'onedark',
+        theme = 'tokyonight',
         component_separators = '|',
         section_separators = '',
       },
@@ -261,6 +265,8 @@ require('lazy').setup({
   "mhartington/formatter.nvim",
   -- Language support, mainly for identation because it is more stable than treesitter
   "dart-lang/dart-vim-plugin",
+  -- Colorizer --
+  'NvChad/nvim-colorizer.lua',
 
   {
     -- Highlight, edit, and navigate code
@@ -340,8 +346,8 @@ vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = tr
 
 
 -- Windown mapping --
-vim.keymap.set('n', 'ss', ':split<CR>')
-vim.keymap.set('n', 'sv', ':vsplit<CR>')
+vim.keymap.set('n', 'ss', ':split<CR><C-w>j')
+vim.keymap.set('n', 'sv', ':vsplit<CR><C-w>l')
 vim.keymap.set('n', 'sj', '<C-w>j')
 vim.keymap.set('n', 'sk', '<C-w>k')
 vim.keymap.set('n', 'sh', '<C-w>h')
@@ -352,6 +358,75 @@ vim.keymap.set('n', 'sq', '<C-w>q')
 vim.keymap.set('n', '<leader>db', '<cmd> DapToggleBreakpoint <CR>', { desc = 'Add breakpoint at line' })
 vim.keymap.set('n', '<leader>dr', '<cmd> DapContinue <CR>', { desc = 'Run or continue debugger' })
 
+-- Colorizer Setup --
+local colorizer = require 'colorizer'
+
+colorizer.setup {
+  filetypes = { "*" },
+  user_default_options = {
+    RGB = true,          -- #RGB hex codes
+    RRGGBB = true,       -- #RRGGBB hex codes
+    names = true,        -- "Name" codes like Blue or blue
+    RRGGBBAA = true,     -- #RRGGBBAA hex codes
+    AARRGGBB = true,     -- 0xAARRGGBB hex codes
+    rgb_fn = false,      -- CSS rgb() and rgba() functions
+    hsl_fn = false,      -- CSS hsl() and hsla() functions
+    css = false,         -- Enable all CSS features: rgb_fn, hsl_fn, names, RGB, RRGGBB
+    css_fn = false,      -- Enable all CSS *functions*: rgb_fn, hsl_fn
+    -- Available modes for `mode`: foreground, background,  virtualtext
+    mode = "background", -- Set the display mode.
+    -- Available methods are false / true / "normal" / "lsp" / "both"
+    -- True is same as normal
+    tailwind = true,                                 -- Enable tailwind colors
+    -- parsers can contain values used in |user_default_options|
+    sass = { enable = false, parsers = { "css" }, }, -- Enable sass colors
+    virtualtext = "■",
+    -- update color values even if buffer is not focused
+    -- example use: cmp_menu, cmp_docs
+    always_update = false
+  },
+  -- all the sub-options of filetypes apply to buftypes
+  buftypes = {},
+}
+
+-- Tokyonight Theme Setup --
+vim.cmd[[colorscheme tokyonight]]
+require('tokyonight').setup({
+  -- your configuration comes here
+  -- or leave it empty to use the default settings
+  style = "moon",        -- The theme comes in three styles, `storm`, `moon`, a darker variant `night` and `day`
+  light_style = "day",    -- The theme is used when the background is set to light
+  transparent = false,    -- Enable this to disable setting the background color
+  terminal_colors = true, -- Configure the colors used when opening a `:terminal` in [Neovim](https://github.com/neovim/neovim)
+  styles = {
+    -- Style to be applied to different syntax groups
+    -- Value is any valid attr-list value for `:help nvim_set_hl`
+    comments = { italic = true },
+    keywords = { italic = true },
+    functions = {},
+    variables = {},
+    -- Background styles. Can be "dark", "transparent" or "normal"
+    sidebars = "dark",              -- style for sidebars, see below
+    floats = "dark",                -- style for floating windows
+  },
+  sidebars = { "qf", "help" },      -- Set a darker background on sidebar-like windows. For example: `["qf", "vista_kind", "terminal", "packer"]`
+  day_brightness = 0.3,             -- Adjusts the brightness of the colors of the **Day** style. Number between 0 and 1, from dull to vibrant colors
+  hide_inactive_statusline = false, -- Enabling this option, will hide inactive statuslines and replace them with a thin border instead. Should work with the standard **StatusLine** and **LuaLine**.
+  dim_inactive = false,             -- dims inactive windows
+  lualine_bold = false,             -- When `true`, section headers in the lualine theme will be bold
+
+  --- You can override specific color groups to use other groups or a hex color
+  --- function will be called with a ColorScheme table
+  ---@param colors ColorScheme
+  on_colors = function(colors) 
+  end,
+
+  --- You can override specific highlights to use other groups or a hex color
+  --- function will be called with a Highlights and ColorScheme table
+  ---@param highlights Highlights
+  ---@param colors ColorScheme
+  on_highlights = function(highlights, colors) end,
+})
 -- [[ Highlight on yank ]]
 -- See `:help vim.highlight.on_yank()`
 local highlight_group = vim.api.nvim_create_augroup('YankHighlight', { clear = true })
@@ -426,8 +501,7 @@ vim.keymap.set("n", "<leader>ds", require('telescope.builtin').lsp_document_symb
 vim.defer_fn(function()
   require('nvim-treesitter.configs').setup {
     -- Add languages to be installed here that you want installed for treesitter
-    ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'javascript', 'typescript', 'vimdoc', 'vim',
-      'bash', 'css', 'json' },
+    ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'javascript', 'typescript', 'vimdoc', 'vim', 'bash', 'css', 'json' },
 
     -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
     auto_install = false,
@@ -580,7 +654,6 @@ local servers = {
   -- rust_analyzer = {},
   -- tsserver = {},
   -- html = { filetypes = { 'html', 'twig', 'hbs'} },
-  prettier = {},
   eslint = {},
   tsserver = {
     filetypes = { 'typescript', 'javascript', 'typescriptreact', 'javascriptreact', 'typescript.tsx', 'javascript.jsx' },
