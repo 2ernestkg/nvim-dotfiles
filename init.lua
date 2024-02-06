@@ -101,6 +101,28 @@ require('lazy').setup({
     },
   },
   {
+    -- JAVA
+    'nvim-java/nvim-java',
+    dependencies = {
+      'nvim-java/lua-async-await',
+      'nvim-java/nvim-java-core',
+      'nvim-java/nvim-java-test',
+      'nvim-java/nvim-java-dap',
+      'MunifTanjim/nui.nvim',
+      'neovim/nvim-lspconfig',
+      'mfussenegger/nvim-dap',
+      {
+        'williamboman/mason.nvim',
+        opts = {
+          registries = {
+            'github:nvim-java/mason-registry',
+            'github:mason-org/mason-registry',
+          },
+        },
+      }
+    },
+  },
+  {
     "rcarriga/nvim-dap-ui",
     event = "VeryLazy",
     dependencies = "mfussenegger/nvim-dap",
@@ -122,14 +144,14 @@ require('lazy').setup({
   {
     "mfussenegger/nvim-dap",
     config = function()
-      require "custom.plugins.dap"
+      require 'kickstart.plugins.dap'
     end
   },
   {
     "mfussenegger/nvim-lint",
     event = "VeryLazy",
     config = function()
-      require "custom.plugins.lint"
+      require 'kickstart.plugins.lint'
     end
   },
 
@@ -281,7 +303,7 @@ require('lazy').setup({
     },
     build = ':TSUpdate',
   },
-  --require 'kickstart.plugins.autoformat',
+  require 'kickstart.plugins.autoformat',
 
   -- NOTE: Next Step on Your Neovim Journey: Add/Configure additional "plugins" for kickstart
   --       These are some example plugins that I've included in the kickstart repository.
@@ -399,7 +421,7 @@ vim.cmd [[colorscheme tokyonight]]
 require('tokyonight').setup({
   -- your configuration comes here
   -- or leave it empty to use the default settings
-  style = "moon",         -- The theme comes in three styles, `storm`, `moon`, a darker variant `night` and `day`
+  style = "night",        -- The theme comes in three styles, `storm`, `moon`, a darker variant `night` and `day`
   light_style = "day",    -- The theme is used when the background is set to light
   transparent = false,    -- Enable this to disable setting the background color
   terminal_colors = true, -- Configure the colors used when opening a `:terminal` in [Neovim](https://github.com/neovim/neovim)
@@ -668,12 +690,12 @@ local servers = {
         disableSuggestions = true,
       }
     },
-    commands = {
-      OrganizeImports = {
-        organize_js_imports,
-        description = "Organize Imports",
-      }
-    },
+    --    commands = {
+    --      OrganizeImports = {
+    --        organize_js_imports,
+    --       description = "Organize Imports",
+    --      }
+    --    },
   },
   lua_ls = {
     Lua = {
@@ -752,6 +774,9 @@ local cmp = require 'cmp'
 local luasnip = require 'luasnip'
 require('luasnip.loaders.from_vscode').lazy_load()
 luasnip.config.setup {}
+
+
+require 'luasnip'.filetype_extend("dart", { "flutter" })
 
 cmp.setup {
   snippet = {
